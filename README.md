@@ -4,6 +4,11 @@ Remote MCP server exposing **read-only** access to the `editorial` (사설) tabl
 in the GQAI Supabase project (`20250320-exnews-supabase`, ~22k Korean newspaper
 editorials from 35 outlets).
 
+## Live deployment
+
+- **Endpoint**: `https://gqai-editorial-mcp.vercel.app/api/mcp`
+- Hosted on Vercel; every push to `main` deploys automatically.
+
 ## Tools
 
 - `search_editorials` — keyword + media outlet + date-range search, paginated
@@ -55,7 +60,7 @@ Any MCP client that supports Streamable HTTP:
 {
   "mcpServers": {
     "editorial": {
-      "url": "https://<your-deployment>.vercel.app/api/mcp",
+      "url": "https://gqai-editorial-mcp.vercel.app/api/mcp",
       "headers": { "Authorization": "Bearer <MCP_API_KEY>" }
     }
   }
@@ -72,13 +77,17 @@ For stdio-only clients, bridge with
       "command": "npx",
       "args": [
         "-y", "mcp-remote",
-        "https://<your-deployment>.vercel.app/api/mcp",
+        "https://gqai-editorial-mcp.vercel.app/api/mcp",
         "--header", "Authorization: Bearer <MCP_API_KEY>"
       ]
     }
   }
 }
 ```
+
+`<MCP_API_KEY>` is the shared secret set as the `MCP_API_KEY` env var on the
+Vercel project — ask whoever deployed it for the value, it's not committed
+anywhere in this repo.
 
 ## Notes on the underlying data
 
