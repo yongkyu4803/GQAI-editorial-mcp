@@ -1,4 +1,4 @@
-import { createMcpHandler, withMcpAuth } from "mcp-handler";
+import { createMcpHandler } from "mcp-handler";
 import {
   GetEditorialInputSchema,
   ListMediaOutletsInputSchema,
@@ -108,22 +108,7 @@ Returns: outlets sorted by editorial count, descending, plus the total number of
   },
 );
 
-/**
- * Static bearer-token gate. This is an internal team tool, not a public
- * integration, so a single shared secret (MCP_API_KEY) is enough — no need
- * for a full OAuth authorization server. The server fails closed if the env
- * var isn't configured.
- */
-const handler = withMcpAuth(
-  baseHandler,
-  async (_req, bearerToken) => {
-    const expected = process.env.MCP_API_KEY;
-    if (!expected || !bearerToken || bearerToken !== expected) {
-      return undefined;
-    }
-    return { token: bearerToken, clientId: "gqai-team", scopes: [] };
-  },
-  { required: true },
-);
-
-export { handler as GET, handler as POST };
+// Fully open — no auth gate. The underlying `editorial` table only grants a
+// public SELECT RLS policy anyway, so this exposes nothing that isn't
+// already readable with the anon key.
+export { baseHandler as GET, baseHandler as POST };

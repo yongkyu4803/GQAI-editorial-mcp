@@ -15,19 +15,19 @@ editorials from 35 outlets).
 - `get_editorial` — full text of one editorial by `id` or `link`
 - `list_media_outlets` — every outlet name and its editorial count
 
-## Why it's safe to expose
+## Why it's safe to expose openly
 
-- The `editorial` table's only RLS policy (`editorial_public_select`) grants
-  `SELECT` to `anon`/`authenticated` — the app can never write, even if the
-  code tried to.
-- The server itself is gated by a static bearer token (`MCP_API_KEY`); no
-  Authorization header (or the wrong token) gets a `401`.
+- No auth gate on the MCP endpoint itself — anyone with the URL can call it.
+- That's fine here because the `editorial` table's only RLS policy
+  (`editorial_public_select`) grants `SELECT` to `anon`/`authenticated` — the
+  app can never write, and it exposes nothing that isn't already readable
+  with the public anon key.
 
 ## Local development
 
 ```bash
 npm install
-cp .env.example .env.local   # fill in SUPABASE_ANON_KEY and MCP_API_KEY
+cp .env.example .env.local   # fill in SUPABASE_ANON_KEY
 npm run dev
 ```
 
@@ -38,7 +38,6 @@ JSON-RPC 2.0). Test it with:
 curl -X POST http://localhost:3000/api/mcp \
   -H "Content-Type: application/json" \
   -H "Accept: application/json, text/event-stream" \
-  -H "Authorization: Bearer $MCP_API_KEY" \
   -d '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}'
 ```
 
@@ -48,20 +47,18 @@ curl -X POST http://localhost:3000/api/mcp \
 vercel link
 vercel env add SUPABASE_URL
 vercel env add SUPABASE_ANON_KEY
-vercel env add MCP_API_KEY
 vercel deploy --prod
 ```
 
 ## Connecting a client
 
-Any MCP client that supports Streamable HTTP:
+Any MCP client that supports Streamable HTTP — no auth needed:
 
 ```json
 {
   "mcpServers": {
     "editorial": {
-      "url": "https://gqai-editorial-mcp.vercel.app/api/mcp",
-      "headers": { "Authorization": "Bearer <MCP_API_KEY>" }
+      "url": "https://gqai-editorial-mcp.vercel.app/api/mcp"
     }
   }
 }
@@ -75,19 +72,11 @@ For stdio-only clients, bridge with
   "mcpServers": {
     "editorial": {
       "command": "npx",
-      "args": [
-        "-y", "mcp-remote",
-        "https://gqai-editorial-mcp.vercel.app/api/mcp",
-        "--header", "Authorization: Bearer <MCP_API_KEY>"
-      ]
+      "args": ["-y", "mcp-remote", "https://gqai-editorial-mcp.vercel.app/api/mcp"]
     }
   }
 }
 ```
-
-`<MCP_API_KEY>` is the shared secret set as the `MCP_API_KEY` env var on the
-Vercel project — ask whoever deployed it for the value, it's not committed
-anywhere in this repo.
 
 ## Notes on the underlying data
 
