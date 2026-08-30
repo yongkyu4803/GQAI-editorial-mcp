@@ -9,6 +9,33 @@ editorials from 35 outlets).
 - **Endpoint**: `https://gqai-editorial-mcp.vercel.app/api/mcp`
 - Hosted on Vercel; every push to `main` deploys automatically.
 
+## Quick install
+
+No auth needed — just point your client at the live endpoint.
+
+**Claude Code:**
+
+```bash
+claude mcp add --transport http editorial https://gqai-editorial-mcp.vercel.app/api/mcp
+```
+
+**Claude Desktop** (`claude_desktop_config.json`):
+
+```json
+{
+  "mcpServers": {
+    "editorial": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://gqai-editorial-mcp.vercel.app/api/mcp"]
+    }
+  }
+}
+```
+
+**Any other Streamable HTTP-capable client:** add
+`https://gqai-editorial-mcp.vercel.app/api/mcp` as the server URL — see
+[Connecting a client](#connecting-a-client) below for the raw config format.
+
 ## Tools
 
 - `search_editorials` — keyword + media outlet + date-range search, paginated
