@@ -27,7 +27,7 @@ Args:
   - offset (number): pagination offset, default 0
   - response_format ('markdown' | 'json'): default 'markdown'
 
-Returns: a ranked-by-date list of matching editorials (title, media, date, link, snippet), newest first.
+Returns: matching editorials (title, media, date, link, snippet). With a query, editorials whose title matches come first, then those matching only in the body — each group newest first, and each result carries matched_in ("title" | "body"). Without a query, all results are newest first.
 
 Examples:
   - "Find 조선일보 editorials about 최저임금 in 2025" -> query="최저임금", media="조선일보", date_from="2025-01-01", date_to="2025-12-31"

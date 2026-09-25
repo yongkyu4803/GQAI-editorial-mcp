@@ -70,6 +70,7 @@ export function formatSearchResultsMarkdown(
     lines.push(`## ${item.title} (id: ${item.id})`);
     lines.push(`- **언론사**: ${item.media}`);
     lines.push(`- **발행일**: ${formatKstDate(item.published_at)}`);
+    if (item.matched_in) lines.push(`- **일치 위치**: ${item.matched_in === "title" ? "제목" : "본문"}`);
     if (item.link) lines.push(`- **원문**: ${item.link}`);
     lines.push(`- **미리보기**: ${item.snippet}`);
     lines.push("");

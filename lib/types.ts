@@ -9,6 +9,9 @@ export interface EditorialRow {
   published_at: string | null;
 }
 
+/** Where a search keyword was found; title matches rank above body-only matches. */
+export type MatchLocation = "title" | "body";
+
 export interface EditorialSummary {
   id: number;
   title: string;
@@ -16,6 +19,8 @@ export interface EditorialSummary {
   published_at: string | null;
   link: string | null;
   snippet: string;
+  /** Present only when the search had a keyword. */
+  matched_in?: MatchLocation;
 }
 
 export interface EditorialDetail {
