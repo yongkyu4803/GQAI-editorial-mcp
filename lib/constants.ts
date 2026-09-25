@@ -16,4 +16,11 @@ export const MAX_AGGREGATION_ROWS = 100_000;
 
 export const EDITORIAL_TABLE = "editorial";
 
+/**
+ * `editorial` minus Korea JoongAng Daily English-only rows that have a "(KOR)" twin
+ * (the twin repeats the English text and adds a Korean translation). Search and
+ * outlet counts read this; get_editorial reads the table so any id or link resolves.
+ */
+export const EDITORIAL_DEDUPED_VIEW = "editorial_deduped";
+
 export const KST_TIME_ZONE = "Asia/Seoul";

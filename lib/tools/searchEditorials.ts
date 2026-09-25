@@ -1,4 +1,4 @@
-import { EDITORIAL_TABLE } from "../constants";
+import { EDITORIAL_DEDUPED_VIEW } from "../constants";
 import {
   formatSearchResultsJson,
   formatSearchResultsMarkdown,
@@ -27,7 +27,7 @@ function buildTextFilter(query: string): TextFilter {
  * `head: true` returns only the count, for sizing a result group without fetching rows.
  */
 function baseQuery(supabase: Supabase, params: SearchEditorialsInput, head = false) {
-  let query = supabase.from(EDITORIAL_TABLE).select(COLUMNS, { count: "exact", head });
+  let query = supabase.from(EDITORIAL_DEDUPED_VIEW).select(COLUMNS, { count: "exact", head });
   if (params.media) {
     query = query.eq("media", params.media);
   }

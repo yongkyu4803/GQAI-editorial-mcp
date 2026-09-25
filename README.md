@@ -107,6 +107,11 @@ For stdio-only clients, bridge with
 
 ## Notes on the underlying data
 
+- Search and outlet counts read the `editorial_deduped` view, which hides Korea
+  JoongAng Daily English-only rows whose `"<title> (KOR)"` twin exists (the twin
+  carries the same English text plus a Korean translation). `get_editorial` still
+  reads the table, so a hidden row's `id` or `link` resolves. The view is defined
+  in [`db/editorial_deduped_view.sql`](db/editorial_deduped_view.sql).
 - `title`/`content` have `pg_trgm` GIN indexes (`editorial_title_trgm_idx`,
   `editorial_content_trgm_idx`) added specifically to make `ILIKE` search fast
   enough to stay under Postgres' statement timeout — without them,
