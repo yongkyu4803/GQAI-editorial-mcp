@@ -16,10 +16,11 @@ const baseHandler = createMcpHandler(
         title: "Search Editorials",
         description: `Search Korean newspaper editorials (사설) by keyword, media outlet, and/or publish date range.
 
-This searches across all ~22,000 editorials collected from major Korean media outlets. It does NOT return full article text in the list view — each result includes a short snippet; use get_editorial with the returned id to fetch the full body.
+This searches across all 23,000+ editorials collected from major Korean media outlets (call list_media_outlets for the current total). It does NOT return full article text in the list view — each result includes a short snippet; use get_editorial with the returned id to fetch the full body.
 
 Args:
-  - query (string, optional): substring to match in title or body text
+  - query (string, optional): case-insensitive substring to match in title or body text. An English edge never matches inside a longer English word: "AI" matches "AI가" or "(AI)" but not "said"; "inflation" does not match "inflationary"
+  - title_only (boolean): match query against the title only, default false. Set true for topic searches — body matching also catches editorials that only mention the keyword in passing
   - media (string, optional): exact media outlet name, e.g. "조선일보" (see list_media_outlets for valid values)
   - date_from / date_to (string, optional): YYYY-MM-DD, inclusive, filters on publish date (KST)
   - limit (number): 1-100, default 20
@@ -31,6 +32,7 @@ Returns: a ranked-by-date list of matching editorials (title, media, date, link,
 Examples:
   - "Find 조선일보 editorials about 최저임금 in 2025" -> query="최저임금", media="조선일보", date_from="2025-01-01", date_to="2025-12-31"
   - "What editorials came out today about the election" -> query="선거", date_from=today, date_to=today
+  - "List editorials about AI from the last month" -> query="AI", title_only=true, date_from=<30 days ago>, date_to=today
 
 Error Handling:
   - Returns a natural-language message (not an exception) when the query fails or nothing matches, with a suggestion for how to adjust filters.`,

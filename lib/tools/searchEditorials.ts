@@ -5,7 +5,7 @@ import {
   ResponseFormat,
   toEditorialSummary,
 } from "../format";
-import { buildOrFilterValue, escapeIlikePattern } from "../queryHelpers";
+import { buildLatinBoundaryRegex, buildOrFilterValue, escapeIlikePattern } from "../queryHelpers";
 import type { SearchEditorialsInput } from "../schemas/editorial";
 import { getSupabaseClient } from "../services/supabase";
 import type { EditorialRow } from "../types";
@@ -18,8 +18,16 @@ export async function searchEditorials(params: SearchEditorialsInput): Promise<s
     .select("id, title, link, media, content, pubdate, published_at", { count: "exact" });
 
   if (params.query) {
-    const pattern = buildOrFilterValue(`%${escapeIlikePattern(params.query)}%`);
-    query = query.or(`title.ilike.${pattern},content.ilike.${pattern}`);
+    const regex = buildLatinBoundaryRegex(params.query);
+    const [operator, pattern] = regex
+      ? ["imatch", regex]
+      : ["ilike", `%${escapeIlikePattern(params.query)}%`];
+    if (params.title_only) {
+      query = query.filter("title", operator, pattern);
+    } else {
+      const orValue = buildOrFilterValue(pattern);
+      query = query.or(`title.${operator}.${orValue},content.${operator}.${orValue}`);
+    }
   }
   if (params.media) {
     query = query.eq("media", params.media);

@@ -20,7 +20,13 @@ export const SearchEditorialsInputSchema = z
       .max(200, "Query must not exceed 200 characters")
       .optional()
       .describe(
-        "Keyword to match against editorial title and body text (Korean or English substring match). Omit to browse by media/date filters alone.",
+        "Keyword to match against editorial title and body text (case-insensitive substring match; an English edge never matches inside a longer English word, so 'AI' skips 'said'). Omit to browse by media/date filters alone.",
+      ),
+    title_only: z
+      .boolean()
+      .default(false)
+      .describe(
+        "Match 'query' against the title only, skipping body text. Use for topic searches where the keyword is often mentioned in passing (e.g. 'AI'). Default: false",
       ),
     media: z
       .string()
