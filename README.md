@@ -143,6 +143,37 @@ For stdio-only clients, bridge with
 }
 ```
 
+## Data coverage
+
+Snapshot taken **2026-09-26** from `editorial_deduped` (the rows the tools
+search). Re-run [`db/coverage.sql`](db/coverage.sql) to refresh these numbers.
+All dates are KST.
+
+- **Range:** 2025-05-01 → 2026-09-24, 23,186 editorials. `published_at` is never null.
+- **Last insert:** 2026-09-24 06:00. Nothing arrived through the snapshot, which
+  falls in the Chuseok holiday (2026-09-24 – 09-26); past holidays show the
+  same kind of gap. If it outlasts the holiday, check the collector.
+- **Collector schedule:** rows land at 00:00, 03:00, 06:00, 12:00, and 18:00
+  (insert times over the last 14 days).
+- **Volume:** about 60 editorials per weekday.
+- **Outlets that start later than May 2025:** 강원일보 and 강원도민일보
+  (2025-05-07), 한경비즈니스 (2025-09-15, 7 total), 머니투데이 (2026-03-05),
+  동행미디어 시대 (2026-03-31), 아시아경제 (2026-06-17), 전자신문 (2026-06-24),
+  kbc광주방송 (one editorial, 2026-07-15). Date-range comparisons across
+  outlets before these dates aren't like-for-like.
+- **Sparse outlets:** 주간조선 (43), 미디어오늘 (44), 전자신문 (12),
+  한경비즈니스 (7) — a few dozen or fewer over the whole range, so don't expect
+  them in any given week.
+- **Days with no editorials** (54 in all):
+  - Saturdays up to 2026-02-07 (38 of them): Saturday was routinely empty until
+    then, so treat those as normal. Since then only 2026-04-11 is empty, next
+    to the 04-10 gap below.
+  - Public holidays: 2025-06-06, 2025-08-15, 2025-10-03 – 10-08 (Chuseok),
+    2026-02-16 – 02-17 (Seollal; 02-16 has 1 editorial).
+  - A few Sundays: 2025-05-04, 2025-12-28, 2026-02-08, 2026-02-15.
+  - **Unexplained weekday gaps:** 2025-09-26 (Fri), 2026-01-30 (Fri), and
+    2026-04-10 (Fri). Treat these as possible collection misses.
+
 ## Notes on the underlying data
 
 - Search and outlet counts read the `editorial_deduped` view, which hides Korea
